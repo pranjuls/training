@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Extra test</title>
+
+	<script type="text/javascript">
+		document.onreadystatechange = () => {
+			if(document.readyState === 'complete') {
+				document.getElementById('inputBtn').addEventListener('click',function() {
+					// body...
+					let name = prompt("Enter your name:");
+					alert('Hi ' + name + ', How are you?');
+				});
+			}
+		}
+	</script>
+</head>
+<body>
+	<button id="inputBtn">click me</button>
+</body>
+</html>
