@@ -1,5 +1,5 @@
 
-#todo_logo {
+#todo-logo {
 	box-sizing: border-box;
 	border:5px solid #FFF;
 	border-radius: 6px 6px 6px 6px;
@@ -30,7 +30,7 @@
 
 }
 
-#todo_empty {
+#todo-empty {
 	position: fixed;
 	
 
