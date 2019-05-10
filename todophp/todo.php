@@ -1,15 +1,8 @@
 <?php
 	session_start();
 
-	if(!isset($_SESSION['todoitems'])){
+	if(!isset($_SESSION['todoitems']))
 		$_SESSION['todoitems'] = [];
-		echo 'called';
-		
-	} else {
-		echo 'not called';
-
-	}
-	echo json_encode($_SESSION['todoitems']);
 ?>
 
 <!DOCTYPE html>
@@ -21,10 +14,10 @@
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 <body>
-	<div class="container" style="text-align: center;">
-		<div class="row" style="display: inline-block; width: 500px; height: 500px">
+	<div class="container">
+		<div class="row">
 		<div class="col-lg-2">
-		<div class="col-12 col-lg-8">
+		<div class="col-12 col-lg-12">
 			
 				<br><br>
 			<form class="" action="storeitem.php" method="post">

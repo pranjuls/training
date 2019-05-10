@@ -1,6 +1,5 @@
 <?php 
 	 	session_start();	
-	 	echo json_encode($_SESSION['todoitems']);
 		array_push($_SESSION['todoitems'],['caption' => $_POST['item'], 'isCompleted' => false]);
 		
 		$array = $_SESSION['todoitems'];
