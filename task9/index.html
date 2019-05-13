@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>JS Task9</title>
+    <script>
+    function changeColor() {
+        //document.getElementById('myDiv').style.backgroundColor ='red';
+        document.getElementById('myDiv').onclick = function(e){
+        	e.target.style.backgroundColor = 'red';
+        }
+    }
+    </script>
+</head>
+
+<body>
+    <div onclick='changeColor()' id='myDiv' style='background-color: blue'>Hey there!</div>
+</body>
+
+</html>
