@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>JS Task - 10</title>
+
+	<script type="text/javascript">
+		document.onreadystatechange = () => {
+			if(document.readyState == 'complete') {
+
+				document.getElementById('inner_div').onclick= (e) => {
+					e.preventDefault();
+					alert('inner div clicked');
+				}
+
+				document.getElementById('middle_div').onclick= (e) => {
+					e.stopPropagation();
+					alert('middle div clicked');
+				}
+
+				document.getElementById('outer_div').onclick= (e) => {
+					
+					alert('outer div clicked');
+				}
+
+			}
+		}
+	</script>
+</head>
+<body>
+	<div id="outer_div">
+		Outer most
+		<div id="middle_div">
+			In Middle
+			<div id="inner_div">
+				Inner Most
+			</div>
+		</div>
+	</div>
+</body>
+</html>
