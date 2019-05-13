@@ -16,7 +16,7 @@ class User{
 	}
 
 	//user login 
-	public function login(){
+	public function loginUser(){
 
 		$query = 'SELECT * FROM '.$this->table . ' WHERE email = :email AND password = :password';
 
@@ -40,7 +40,7 @@ class User{
 	}
 
 	//register user
-	public function register() {
+	public function registerUser() {
 
 		$query = 'INSERT INTO '.$this->table .' SET email =:email, password = :password, user_token = :user_token';
 
@@ -54,11 +54,15 @@ class User{
 		$stmt->bindParam(':email', $this->email);
 		$stmt->bindParam(':password', $this->password);
 
+		if($this->checkEmail()){
+			return false;
+		}
+
 		if($stmt->execute()) {
 			return true;
 		} 
 		
-		printf("Error :%s.\n", $stmt->error);
+		printf("Error:%s\n",$stmt->error);
 		return false;
 	}
 
