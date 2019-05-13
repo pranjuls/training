@@ -7,7 +7,6 @@ class TodoTask {
 	private $table ='todo_items';
 
 	//Properties
-	public $user_token;
 	public $task_id;
 	public $todo_title;
 	public $todo_desc;
@@ -22,7 +21,7 @@ class TodoTask {
 	//Read all tasks
 	public function readTasks(){
 	
-		$query= 'SELECT * FROM '. $this->table .' WHERE user_token = ?';
+		$query= 'SELECT * FROM '. $this->table;
 
 		$stmt = $this->conn->prepare($query);
 
@@ -34,17 +33,17 @@ class TodoTask {
 
 	//Create a task
 	public function addTask(){
-		$query = 'INSERT INTO '.$this->table . ' SET user_token = :user_token, todo_title = :todo_title, todo_desc = :todo_desc, status = :status, priority= :priority';
+		$query = 'INSERT INTO '.$this->table . ' SET  todo_title = :todo_title, todo_desc = :todo_desc, status = :status, priority= :priority';
 
 		$stmt = $this->conn->prepare($query);
 
-		$this->user_token = htmlspecialchars(strip_tags($this->user_token));
+		// $this->user_token = htmlspecialchars(strip_tags($this->user_token));
 		$this->todo_title = htmlspecialchars(strip_tags($this->todo_title));
 		$this->todo_desc = htmlspecialchars(strip_tags($this->todo_desc));
 		$this->status = htmlspecialchars(strip_tags($this->status));
 		$this->priority = htmlspecialchars(strip_tags($this->priority));
 
-		$stmt->bindParam(':user_token', $this->user_token);
+		// $stmt->bindParam(':user_token', $this->user_token);
 		$stmt->bindParam(':todo_title', $this->todo_title);
 		$stmt->bindParam(':todo_desc', $this->todo_desc);
 		$stmt->bindParam(':status', $this->status);
@@ -61,19 +60,17 @@ class TodoTask {
 
 	//Create a task
 	public function updateTask(){
-		$query = 'UPDATE '.$this->table . ' SET todo_title = :todo_title, todo_desc = :todo_desc, status = :status, priority= :priority WHERE task_id = :task_id AND user_token = :user_token';
-
-		echo json_encode($query);
+		$query = 'UPDATE '.$this->table . ' SET todo_title = :todo_title, todo_desc = :todo_desc, status = :status, priority= :priority WHERE task_id = :task_id';
 
 		$stmt = $this->conn->prepare($query);
 
-		$this->user_token = htmlspecialchars(strip_tags($this->user_token));
+		// $this->user_token = htmlspecialchars(strip_tags($this->user_token));
 		$this->todo_title = htmlspecialchars(strip_tags($this->todo_title));
 		$this->todo_desc = htmlspecialchars(strip_tags($this->todo_desc));
 		$this->status = htmlspecialchars(strip_tags($this->status));
 		$this->priority = htmlspecialchars(strip_tags($this->priority));
 
-		$stmt->bindParam(':user_token', $this->user_token);
+		// $stmt->bindParam(':user_token', $this->user_token);
 		$stmt->bindParam(':todo_title', $this->todo_title);
 		$stmt->bindParam(':todo_desc', $this->todo_desc);
 		$stmt->bindParam(':status', $this->status);
@@ -92,14 +89,14 @@ class TodoTask {
 	//Delete Task
     public function deleteTask() {
           
-          $query = 'DELETE FROM ' . $this->table . ' WHERE task_id = :task_id AND user_token = :user_token';
+          $query = 'DELETE FROM ' . $this->table . ' WHERE task_id = :task_id';
        
           $stmt = $this->conn->prepare($query);
           
           $this->task_id = htmlspecialchars(strip_tags($this->task_id));
         
           $stmt->bindParam(':task_id', $this->task_id);
-          $stmt->bindParam(':user_token', $this->user_token);
+          // $stmt->bindParam(':user_token', $this->user_token);
           
           if($stmt->execute()) {
             return true;
@@ -110,11 +107,11 @@ class TodoTask {
     }
 
     public function readTaskId() {
-    	$query ='SELECT * FROM '.$this->table .' WHERE user_token = :user_token AND todo_title = :todo_title AND todo_desc = :todo_desc AND status = :status AND priority= :priority';
+    	$query ='SELECT * FROM '.$this->table .' WHERE todo_title = :todo_title AND todo_desc = :todo_desc AND status = :status AND priority= :priority';
 
     	$stmt = $this->conn->prepare($query);
 
-    	$stmt->bindParam(':user_token', $this->user_token);
+    	// $stmt->bindParam(':user_token', $this->user_token);
 		$stmt->bindParam(':todo_title', $this->todo_title);
 		$stmt->bindParam(':todo_desc', $this->todo_desc);
 		$stmt->bindParam(':status', $this->status);

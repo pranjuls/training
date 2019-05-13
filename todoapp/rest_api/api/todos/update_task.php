@@ -13,17 +13,16 @@
 
 	$todoTask = new TodoTask($db);
 
-	$todoTask->user_token = $_POST['user_token'];
-	$todoTask->todo_title = $_POST['todo_title'];
-	$todoTask->todo_desc = $_POST['todo_desc'];
-	$todoTask->status = $_POST['status'];
+	$todoTask->todo_title = $_POST['title'];
+	$todoTask->todo_desc = $_POST['description'];
+	$todoTask->status = strcmp($_POST['status'], "Not Completed") == 0 ? 0 : 1;
 	$todoTask->priority = $_POST['priority'];
 	$todoTask->task_id = $_POST['task_id'];
 
 	$result = array();
 	if ($todoTask->updateTask()) {
 		$result['status'] = 'successful';
-		$result['data'] = $todoTask->task_id . ' task updated.';
+		$result['data'] = $todoTask->task_id;
 	} else {
 		$result['status'] = 'unsuccessful';
 		$result['data'] = 'error updating task';

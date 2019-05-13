@@ -4,33 +4,55 @@ let taskListClasses = { 'Low': '', 'Medium': 'list-task-medium', 'High': 'list-t
 //object to hold single task
 
 //Array to hold all tasks
-var tasks = [];
+let tasks = [];
 
 //number to maintain current selected task index in array
-var taskNo = 0;
-var lastSelection = -1;
+let taskNo = 0;
+let lastSelection = -1;
 
 //function to add a new task or update a existing task
-var addOrUpdateTask = function(title, description, priority, status, position = -1) {
-    var task = {
+let addOrUpdateTask = function(title, description, priority, status, position = -1) {
+    let task = {
         'title': title,
         'description': description,
         'priority': priority,
         'status': status
     }
     if (position == -1) {
-        tasks.push(task);
-        taskNo = tasks.length - 1;
+        console.log(task);
+        postTasks("http://api.local.sahusoft.info/todos/add_task.php", task, position);
     } else {
-        tasks[position] = task;
+        task['task_id'] =tasks[position]['task_id'];
+        postTasks("http://api.local.sahusoft.info/todos/update_task.php", task, position);
     }
 
 
 }
 
+//function to update tasks fetched from server
+let updateTasks = function(tasksResponse) {
+
+    if(tasksResponse['status'] == 'successful') {
+        tasks = tasksResponse['data'];
+        console.log(tasks);
+        renderTaskslist(); 
+        if (tasks.length == 0 && typeof task != 'string') {
+            document.getElementById('todo_holder_parent').className += ' hide-section';
+            document.getElementById('todo_empty').className = "container-fluid";
+        } else {
+           //  document.getElementById('todo_holder_parent').className = 'container';
+            // document.getElementById('todo_empty').className = "container-fluid  hide-section";
+            renderTask(0);
+            taskNo = 0;
+        }
+
+    } else {
+        
+    }
+}
 
 //function to update status of a task
-var updateTaskStatus = (position) => {
+let updateTaskStatus = (position) => {
     if (document.getElementById('todo_update_task_status').innerHTML == 'Mark as Completed')
         tasks[position].status = 'Completed';
     else
@@ -38,7 +60,7 @@ var updateTaskStatus = (position) => {
 }
 
 
-var renderTask = function(position, previous = -1) {
+let renderTask = function(position, previous = -1) {
 
     //check if no task is shown currently, and add task form is open
 
@@ -87,9 +109,10 @@ var renderTask = function(position, previous = -1) {
         updateBtn.innerHTML = 'Update Task';
         updateBtn.className = 'btn btn-primary';
     }
+    console.log("rendering item");
 }
 
-var renderTaskslist = function() {
+let renderTaskslist = function() {
 
     let list = '';
     let idx = 0;
@@ -104,14 +127,15 @@ var renderTaskslist = function() {
     });
 
     document.getElementById('todo_task_list').innerHTML = list;
+    console.log("rendering task list");
 }
 
-var getEventTarget = function(e) {
+let getEventTarget = function(e) {
     e = e || window.event;
     return e.target || e.srcElement;
 }
 
-var loadForm = function(position) {
+let loadForm = function(position) {
     console.log('i am being called');
     document.getElementById('todo_holder_single').className += ' hide-section';
     document.getElementById('todo_add_form').className = "col-12 col-md-8";
@@ -124,7 +148,7 @@ var loadForm = function(position) {
     }
 }
 
-var fetchFormDataAndUpdate = function(position) {
+let fetchFormDataAndUpdate = function(position) {
     let title = document.getElementById('add_task_title').value;
     let desc = document.getElementById('add_task_description').value;
     let priority = "Low";
@@ -136,40 +160,113 @@ var fetchFormDataAndUpdate = function(position) {
         priority = "High";
 
     addOrUpdateTask(title, desc, priority, "Not Completed", position);
-    renderTaskslist();
 
 }
 
+let postTasks = (url, task, position) => {
+    let params = Object.keys(task).map(
+        function(k){
+            return encodeURIComponent(k)+'='+encodeURIComponent(task[k])
+        }).join('&');
+    let xhr = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
+    xhr.open('POST', url);
+    xhr.onreadystatechange = function(){
+        if (xhr.readyState > 3&& xhr.status == 200){
+            console.log(xhr.responseText);
+            let response = JSON.parse(xhr.responseText);
+            if(response['status'] == 'successful'){
+                console.log(response);
+                if(position == -1){
+                    task['task_id'] = response['data'];
+                    tasks.push(task);
+                    taskNo = tasks.length - 1;
+    
+                } else {
+                    tasks[position] = task;
+                    taskNo = position;
+                    
+                }
+                renderTaskslist();
+                renderTask(taskNo, lastSelection);
+                console.log(tasks);
+            } else {
+                alert("Something went wrong.");
+            }
+        }
+    };
+
+    xhr.setRequestHeader("X-Requested-With","XMLHttpRequest");
+    xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+    xhr.send(params);
+}
+
+
+let getTasks = (url) => {
+    let xhr = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
+    xhr.open('GET', url);
+    xhr.onreadystatechange = function(){
+        if (xhr.readyState > 3 && xhr.status == 200){
+            updateTasks(JSON.parse(xhr.responseText));
+        }
+    };
+
+    xhr.setRequestHeader("X-Requested-With","XMLHttpRequest");
+    xhr.send();
+}
+
+let deleteTaskFromServer = (url) => {
+    let xhr = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
+    xhr.open('GET', url);
+
+    xhr.onreadystatechange = function() {
+        if(xhr.readyState > 3 && xhr.status == 200) {
+            let response = JSON.parse(xhr.responseText);
+            if(response['status'] == 'successful') {
+                tasks.splice(taskNo, 1);
+                taskNo = tasks.length > 0 ? 0 : -1;
+                lastSelection = taskNo;
+                renderTaskslist();
+                if (taskNo != -1)
+                    renderTask(taskNo);
+                else {
+                    document.getElementById('todo_holder_parent').className = 'container hide-section';
+                    document.getElementById('todo_empty').className = "container-fluid";
+
+                }
+            }
+        }
+    }
+
+    xhr.setRequestHeader("X-Requested-With","XMLHttpRequest");
+    xhr.send();
+}
 
 document.onreadystatechange = () => {
 
     let updateFlag = false;
     if (document.readyState === 'complete') {
-        renderTaskslist();
-        if (tasks.length == 0) {
-            document.getElementById('todo_holder_parent').className += ' hide-section';
-            document.getElementById('todo_empty').className = "container-fluid";
-        } else {
-            // document.getElementById('todo_holder_parent').className = 'container';
-            // document.getElementById('todo_empty').className = "container-fluid  hide-section";
-            renderTask(0);
-            taskNo = 0;
-        }
+
+        getTasks("http://api.local.sahusoft.info/todos/read_task.php");
+        
 
         document.getElementById('add_todo_item').addEventListener('click', function() {
+            
             loadForm();
             console.log("add item called");
 
         });
 
         document.getElementById('add_initial_item').addEventListener('click', function() {
+        
             document.getElementById('todo_holder_parent').className = 'container';
             document.getElementById('todo_empty').className = "container-fluid  hide-section";
             loadForm();
             console.log("im dsa");
-        })
+        });
+
+
         document.getElementById('todo_task_list').addEventListener('click', function(event) {
-            var target = getEventTarget(event);
+            let target = getEventTarget(event);
             let idx = target.id;
             if (taskNo == idx)
                 return;
@@ -185,31 +282,21 @@ document.onreadystatechange = () => {
 
 
         document.getElementById('submit_task').addEventListener('click', function() {
+
             if (updateFlag) {
                 fetchFormDataAndUpdate(taskNo);
-                renderTask(taskNo, lastSelection);
                 updateFlag = false;
             } else {
                 fetchFormDataAndUpdate();
-                renderTask(tasks.length - 1);
+                
             }
 
         });
 
         document.getElementById('todo_update_task').addEventListener('click', function() {
-            console.log(document.getElementById('todo_update_task').innerHTML);
+            console.log(document.getElementById('todo_update_task').innerHTML+" "+tasks[taskNo]['task_id']);
             if (document.getElementById('todo_update_task').innerHTML == 'Delete Task') {
-                tasks.splice(taskNo, 1);
-                taskNo = tasks.length > 0 ? 0 : -1;
-                lastSelection = taskNo;
-                renderTaskslist();
-                if (taskNo != -1)
-                    renderTask(taskNo);
-                else {
-                    document.getElementById('todo_holder_parent').className = 'container hide-section';
-                    document.getElementById('todo_empty').className = "container-fluid";
-
-                }
+                deleteTaskFromServer("http://api.local.sahusoft.info/todos/delete_task.php?task_id=" + tasks[taskNo]['task_id']);
             } else {
                 loadForm(taskNo);
                 updateFlag = true;
@@ -222,6 +309,7 @@ document.onreadystatechange = () => {
             console.log(taskNo);
             updateTaskStatus(taskNo);
             renderTask(taskNo);
-        })
+        });
+
     }
 }

@@ -13,7 +13,6 @@
 
 	$todoTask = new TodoTask($db);
 
-	$todoTask->user_token = $_GET['user_token'];
 	$todoTask->task_id = $_GET['task_id'];
 
 	$result = array();

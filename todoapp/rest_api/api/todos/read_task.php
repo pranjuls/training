@@ -2,6 +2,8 @@
 	
 	header('Access-Control-Allow-Origin: *');
 	header('Content-Type: application/json');
+	header('Access-Control-Allow-Methods: GET');
+	header('Access-Control-Allow-Headers: Access-Control-Allow-Headers,Content-Type,Access-Control-Allow-Methods, Authorization, X-Requested-With');
 
 	include_once '../../config/Database.php';
 	include_once '../../models/TodoTask.php';
@@ -11,7 +13,6 @@
 
 	$todoTasks = new TodoTask($db);
 
-	$todoTasks->user_token = isset($_GET['user_token']) ? $_GET['user_token'] : die();
 
 	$tasks = $todoTasks->readTasks();
 
@@ -26,19 +27,18 @@
 			extract($row);
 
 			$task_item = array(
-				'user_token' => $user_token,
 				'task_id' => $task_id,
-				'todo_title' => $todo_title,
-				'todo_desc' => $todo_desc,
-				'status' => $status,
-				'priority' => $priority
+				'title' => $todo_title,
+				'description' => $todo_desc,
+				'status' => $status == 0 ? "Not Completed" : "Completed",
+				'priority' => ucwords($priority)
 			);
 
 			array_push($tasks_arr['data'], $task_item);
 		}
 	} else {
-		$tasks_arr['status'] = 'successful';
-		$tasks_arr['data'] = 'No task found';
+		$tasks_arr['status'] = 'no task found';
+		$tasks_arr['data'] = '';
 	}
 
 	echo json_encode($tasks_arr);

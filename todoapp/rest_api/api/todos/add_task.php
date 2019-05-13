@@ -16,23 +16,24 @@
 	//Get raw posted data
 
 
-	$todoTask->user_token = $_POST['user_token'];
-	$todoTask->todo_title = $_POST['todo_title'];
-	$todoTask->todo_desc = $_POST['todo_desc'];
-	$todoTask->status = $_POST['status'];
+
+	$todoTask->todo_title = $_POST['title'];
+	$todoTask->todo_desc = $_POST['description'];
+	$todoTask->status = strcmp($_POST['status'], "Not Completed") == 0 ? 0 : 1;
 	$todoTask->priority = $_POST['priority'];
-
-	//Save Data
+	
 	$result = array();
-	if ($todoTask->addTask()) {
-		# code...
-		$todoTask->readTaskId();
-		$result['status'] = 'successful';
-		$result['data'] = $todoTask->task_id;
-	} else {
-		$result['status'] = 'unsuccessful';
-		$result['data'] = 'error inserting task';
+	if($_SERVER['REQUEST_METHOD'] == 'POST'){
+		if ($todoTask->addTask()) {
+			# code...
+			$todoTask->readTaskId();
+			$result['status'] = 'successful';
+			$result['data'] = $todoTask->task_id;
+		} else {
+			$result['status'] = 'unsuccessful';
+			$result['data'] = 'error inserting task';
+			$result['method'] = $_SERVER['REQUEST_METHOD'];
+		}
 	}
-
 	echo json_encode($result);
 ?>
