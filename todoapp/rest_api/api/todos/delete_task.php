@@ -12,9 +12,12 @@
 	$db = $database->connect();
 
 	$todoTask = new TodoTask($db);
+	// echo "delete data: ".json_encode($_DELETE);
+
 
 	$todoTask->task_id = $_GET['task_id'];
 
+	echo "task id:".$todoTask->task_id;
 	$result = array();
 	if ($todoTask->deleteTask()) {
 		$result['status'] = 'successful';

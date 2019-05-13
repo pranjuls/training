@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>JS test</title>
+    <script type="text/javascript">
+    document.onreadystatechange = () => {
+        if (document.readyState == 'complete') {
+
+
+            document.getElementById('click_btn').addEventListener('click', function() {
+
+                let name = prompt("What is your name?");
+                alert("Hello " + name + ", I hope yo're doing");
+            });
+        }
+
+    }
+    </script>
+</head>
+
+<body>
+    <button id="click_btn">Click me too</button>
+</body>
+
+</html>
