@@ -58,7 +58,7 @@ let renderTasksList = function() {
 
     let list = '';
     let idx = 0;
-
+    console.log(todoApp.tasks);
     todoApp.tasks.map(task => {
         let itemBg = taskListClasses[task.priority];
         if (task.status == 'Completed') {
@@ -122,7 +122,7 @@ let updateTasks = function(tasksResponse) {
         todoApp.tasks = tasksResponse['data'];
         console.log(todoApp.tasks);
         todoApp.renderList();
-        if (todoApp.tasks.length == 0 && typeof todoApp.task != 'string') {
+        if (todoApp.tasks.length == 0 && typeof todoApp.tasks != 'string') {
             $('#todo_holder_parent').addClass('hide-section');
             $('#todo_empty').attr('class', 'container-fluid');
         } else {
@@ -132,8 +132,9 @@ let updateTasks = function(tasksResponse) {
             taskNo = 0;
         }
 
-    } else {
-        alert('error updating task');
+    } else if (tasksResponse['status'] == 'no task found'){
+        $('#todo_holder_parent').addClass('hide-section');
+        $('#todo_empty').attr('class', 'container-fluid');
     }
 }
 
@@ -153,6 +154,8 @@ let getEventTarget = function(e) {
 }
 
 let loadForm = function(position) {
+    $("#invalid-title").hide();
+    $("#invalid-desc").hide();
     console.log('i am being called');
     $('#todo_holder_single').addClass('hide-section');
     $('#todo_add_form').attr('class', "col-12 col-md-8");
@@ -161,11 +164,12 @@ let loadForm = function(position) {
         $('#add_task_description').val(todoApp.tasks[position].description);
         let priority = todoApp.tasks[position].priority;
 
-        $('#priority_' + priority.toLowerCase()+":checked").val(true);
+        $("#priority_" + priority.toLowerCase() + ":checked").val('checked');
     }
 }
 
 let fetchFormDataAndUpdate = function(position) {
+    
     let title = $('#add_task_title').val();
     let desc = $('#add_task_description').val();
     let priority = "Low";
@@ -176,7 +180,24 @@ let fetchFormDataAndUpdate = function(position) {
     else if ($('#priority_high:checked').val())
         priority = "High";
 
-    addOrUpdateTask(title, desc, priority, "Not Completed", position);
+    let form = $("#task_form");
+    form.submit(function(event) {
+        event.preventDefault();
+        if (!title || !desc) {
+            if(!title)
+                $("#invalid-title").show();
+            if(!desc)
+                $("#invalid-desc").show();
+        } else {
+            addOrUpdateTask(title, desc, priority, "Not Completed", position);
+        }
+    });
+
+    // if( title && desc ){
+    //     addOrUpdateTask(title, desc, priority, "Not Completed", position);
+    // }else{
+    //     $('#error_message').removeClass('hide-section');
+    // }
 
 }
 
@@ -185,7 +206,7 @@ let postTasks = (url, task, position) => {
     jQuery.post(url, task, function(data) {
         console.log(data);
         if (data['status'] == 'successful') {
-            
+
             if (position == -1) {
                 task['task_id'] = data['data'];
                 todoApp.addTask(task);
@@ -300,5 +321,24 @@ $(document).ready(function() {
         todoApp.render(taskNo);
     });
 
+    $('#add_task_title').focusout(function(){
+        if($('#add_task_title').val()){
+            $("#invalid-title").hide();
+            $("#add_task_title").css({"border" : "1px solid #D3D3D3", "color" : "black"});
+        } else {
+            $("#invalid-title").show();
+            $("#add_task_title").css({"border" : "1px solid red", "color" : "black"});
+        }
+    });
+
+    $('#add_task_description').focusout(function(){
+        if($('#add_task_description').val()){
+            $("#invalid-desc").hide();
+            $("#add_task_description").css({"border" : "1px solid #D3D3D3", "color" : "black"});
+        } else {
+            $("#invalid-desc").show();
+            $("#add_task_description").css({"border" : "1px solid red", "color" : "black"});
+        }
+    });
 
 });

@@ -37,7 +37,7 @@
 			array_push($tasks_arr['data'], $task_item);
 		}
 	} else {
-		$tasks_arr['status'] = 'no task found';
+		$tasks_arr['status'] = 'successful';
 		$tasks_arr['data'] = '';
 	}
 

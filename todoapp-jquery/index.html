@@ -32,7 +32,7 @@
             <ul class="navbar-nav">
                 <li class="nav-item font-roboto-slab"><a class="nav-link disabled">Pending Tasks</a></li>
                 <li class="nav-item font-roboto-slab"><a class="nav-link disabled">Completed Tasks</a></li>
-                 <!-- <li class="nav-item" id="login-btn"><button class="btn btn-outline-primary font-roboto-slab">Login</button></li>
+                <!-- <li class="nav-item" id="login-btn"><button class="btn btn-outline-primary font-roboto-slab">Login</button></li>
                 <li class="nav-item" id="register-btn"><button class="btn btn-link font-roboto-slab">Register</button></li> -->
             </ul>
         </div>
@@ -55,7 +55,6 @@
                     </div>
                 </div>
             </div>
-
             <!-- div for showing login status -->
             <!-- <div class="alert alert-danger hide-section" role="alert" id="login_first">
                 Please login first to continue.
@@ -66,9 +65,7 @@
             <div class="alert alert-success hide-section" role="alert" id="registered_success">
                 Successfully registered. Please login to continue.
 </div> -->
-         
             <div class="alert alert-danger hide-section" role="alert" id="error_section"></div>
-
             <!--div for holding content of selected todo-->
             <br />
             <br />
@@ -97,14 +94,20 @@
             </div>
             <!-- form for adding a new todo -->
             <div class="col-12 col-md-8 hide-section" id="todo_add_form">
-                <form style="width: 100%" onsubmit="event.preventDefault()">
+                <form id="task_form" style="width: 100%">
                     <div class="form-group">
                         <label for="taskTitle"><strong>Title of Task</strong></label>
                         <input type="text" class="form-control" id="add_task_title" placeholder="Enter the title for this task">
+                        <div id="invalid-title">
+                            <small style="color: red;">&emsp;Please enter task title.</small>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="taskDescription"><strong>Description</strong></label>
                         <textarea class="form-control" id="add_task_description" placeholder="Action you anticipate to perform for this specific ToDo Task" rows="7"></textarea>
+                        <div id="invalid-desc">
+                            <small style="color: red;">&emsp;Please enter task description.</small>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="taskPriority"><strong>Priority of Task&ensp;</strong></label>
