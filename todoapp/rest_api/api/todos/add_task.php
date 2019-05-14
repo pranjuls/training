@@ -5,8 +5,7 @@
 	header('Access-Control-Allow-Methods: POST');
 	header('Access-Control-Allow-Headers: Access-Control-Allow-Headers,Content-Type,Access-Control-Allow-Methods, Authorization, X-Requested-With');
 
-	echo "test log: abc";
-	echo "method:".$_SERVER['REQUEST_METHOD'];
+
 	include_once '../../config/Database.php';
 	include_once '../../models/TodoTask.php';
 

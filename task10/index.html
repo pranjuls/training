@@ -8,6 +8,7 @@
 			if(document.readyState == 'complete') {
 
 				document.getElementById('inner_div').onclick= (e) => {
+					alert(e.target.id);
 					e.preventDefault();
 					alert('inner div clicked');
 				}
@@ -15,7 +16,7 @@
 				document.getElementById('middle_div').onclick= (e) => {
 					e.stopPropagation();
 					alert('middle div clicked');
-				}
+		
 
 				document.getElementById('outer_div').onclick= (e) => {
 					
