@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+</head>
+
+<body>
+</body>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
+<script type="text/javascript">
+let api = 'https://gist.githubusercontent.com/ghosh-jaideep/668984ebd52627fde34085a68338ea14/raw/9b556b3014abdd9aa0ccfbcc1923ffe0bfb5d771/coursera.json';
+
+// let apiCall = (idx) => jQuery.get(api, (data) => new Promise((resolve,reject) => {
+// 	console.log('promise created: '+idx);
+// 	resolve(idx);
+// }).then('resolved for: '+idx);
+
+let apiCall = (idx) => new Promise((resolve, reject) => {
+    console.log('promise created: ' + idx);
+     $.get(api, function(data) {
+            resolve(idx);
+     });
+});
+
+let i;
+let promiseList = [];
+for (i = 0; i < 100; i++) {
+	promiseList.push(apiCall(i)
+		.then(
+			idx => console.log('data received for : ' + idx)
+			).catch(
+			idx => console.log('data rejected for :' + idx )
+			)
+		);
+}
+
+Promise.all(promiseList).then(()=> console.log('all data received'));
+</script>
+
+</html>

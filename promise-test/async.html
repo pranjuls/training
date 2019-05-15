@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+</head>
+
+<body>
+</body>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
+<script type="text/javascript">
+let api = 'https://gist.githubusercontent.com/ghosh-jaideep/668984ebd52627fde34085a68338ea14/raw/9b556b3014abdd9aa0ccfbcc1923ffe0bfb5d771/coursera.json';
+
+let apiCall = (idx) => new Promise((resolve, reject) => {
+    console.log('promise created: ' + idx);
+    $.get(api, function(data) {
+        // console.log('data received for: ' + idx);
+        // resolve('ttst');});
+    }).done((data) => resolve(idx));
+});
+
+let i;
+let promiseList = [];
+
+async function launchAll() {
+    for (i = 0; i < 100; i++) {
+    	console.log('started iteration : ', i);
+        let result = await apiCall(i);
+        // if(i === 50){
+        // 	break;
+        // }
+        // console.log('started iteration : ', i);
+        console.log('result: ' + result);
+
+    }
+
+    console.log('all done async');
+}
+
+launchAll();
+
+console.log('all sync');
+setTimeout(()=>console.log('dasdaadsa'),200);
+</script>
+
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+</head>
+
+<body>
+</body>
+<script type="text/javascript">
+let getPromise = (idx) => new Promise((resolve, reject) => {
+    let no = Math.floor(Math.random() * 10);
+    console.log('promise created: '+idx);
+    setTimeout(() => resolve(no), 20);
+});
+
+let numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9,1, 2, 3, 4, 5, 6, 7, 8, 9,1, 2, 3, 4, 5, 6, 7, 8, 9,1, 2, 3, 4, 5, 6, 7, 8, 9,1, 2, 3, 4, 5, 6, 7, 8, 9,1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+let promiseList = [];
+let randomNumbers = [];
+let indexes = [];
+numbers.forEach((val, index) => {
+    getPromise(index)
+        .then(no => {
+            indexes.push(index);
+            randomNumbers.push(val * no);
+            console.log('promise resolved: ' + index);
+        });
+});
+
+Promise.all(promiseList)
+    .then(() => setTimeout(() => {
+    	console.log('inside all')
+        console.log(randomNumbers);
+        console.log(indexes);
+    }, 2000));
+</script>
+
+</html>
