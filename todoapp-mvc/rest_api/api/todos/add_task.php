@@ -15,14 +15,27 @@
 	$todoTask = new TodoTask($db);
 
 	//Get raw posted data
+	$data = file_get_contents('php://input');
+	// echo "php stream: ".$data." type: ".gettype($data)."\n";
 
+	if(isset($_POST['title']) && isset($_POST['title']) && isset($_POST['title']) && isset($_POST['title'])){
+		$todoTask->todo_title = $_POST['title'] ? $_POST['title'] : die();
+		$todoTask->todo_desc = $_POST['description'] ? $_POST['description'] : die();
+		$todoTask->status = strcmp($_POST['status'], "Not Completed") == 0 ? 0 : 1;
+		$todoTask->priority = $_POST['priority'];
+	} else if (isset($data)) {
+		$arr = json_decode($data, true);
+		// echo json_encode($arr);
+		$todoTask->todo_title = $arr['title'] ? $arr['title'] : die();
+		$todoTask->todo_desc = $arr['description'] ? $arr['description'] : die();;
+		$todoTask->status = strcmp($arr['status'], "Not Completed") == 0 ? 0 : 1;
+		$todoTask->priority = $arr['priority'] ? $arr['priority'] : die();
+	}
 
-
-	$todoTask->todo_title = $_POST['title'] ? $_POST['title'] : die();
-	$todoTask->todo_desc = $_POST['description'] ? $_POST['description'] : die();
-	$todoTask->status = strcmp($_POST['status'], "Not Completed") == 0 ? 0 : 1;
-	$todoTask->priority = $_POST['priority'];
 	
+
+	// echo "data sent: ".json_encode($todoTask);
+	// die();	
 	$result = array();
 	// if($_SERVER['REQUEST_METHOD'] == 'POST'){
 		if ($todoTask->addTask()) {

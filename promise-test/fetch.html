@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+</head>
+
+<body>
+    <div id="root"></div>
+</body>
+<script type="text/javascript">
+let api = 'https://gist.githubusercontent.com/ghosh-jaideep/668984ebd52627fde34085a68338ea14/raw/9b556b3014abdd9aa0ccfbcc1923ffe0bfb5d771/coursera.json';
+let api2 = 'http://mvcapi.local.sahusoft.info/todos/read_task.php';
+
+let postApi = 'http://mvcapi.local.sahusoft.info/todos/add_task.php';
+
+// let postData = {
+//     title: 'fetch title',
+//     description: 'fetch description',
+//     status: 'Not Completed',
+//     priority: 'Low'
+// };
+
+function Task(title, description, priority, status) {
+    this.title = title,
+    this.description = description,
+    this.priority = priority,
+    this.status = status
+}
+
+document.onreadystatechange = () => {
+    if (document.readyState == 'complete') {
+
+    	let postData = new Task('fetch sdf new','fetch tste','High','Not Completed');
+
+    	console.log('Post data: ',postData);
+        fetch(api2)
+            .then((response) => response.json())
+            .then((data) => {
+                //console.log(data);
+                let list = [];
+                data.data.map(element => list.push(element));
+                document.getElementById('root').innerHTML = JSON.stringify(list);
+            });
+
+        fetch(postApi, {
+                method: 'POST',
+                body: JSON.stringify(postData),
+                headers: {
+                    'Content-Type': 'application/json',
+                    //'Content-Type': 'application/x-www-form-urlencoded',
+                }
+            }).then(response => {
+                console.log("A: ", response);
+                console.log("A: ", response.body);
+                //console.log("B: ", response.json());
+                return response.json();
+            })
+            .then(data => { 
+            	console.log('Success a: ', data);
+            	//console.log('Success b: ', data.json()) 
+            })
+            .catch(error => console.log('Error: ', error));
+
+    }
+}
+</script>
+
+</html>
